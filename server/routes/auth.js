@@ -1,6 +1,6 @@
-import express from "express";
-import * as dotenv from "dotenv";
-import { login, register } from "../controllers/auth";
+const express = require("express");
+const dotenv = require("dotenv");
+const { register, login } = require("../controller/auth");
 
 dotenv.config();
 
@@ -12,4 +12,4 @@ router.post("/register", register);
 //LOGIN
 router.post("/login", login);
 
-export default router;
+module.exports = router;

@@ -1,12 +1,12 @@
-import jwt from "jsonwebtoken";
-import CryptoJS from "crypto-js";
-import User from "../models/User";
-import * as dotenv from "dotenv";
+const jwt = require("jsonwebtoken");
+const CryptoJS = require("crypto-js");
+const User = require("../models/user");
+const dotenv = require("dotenv");
 
 dotenv.config();
 
 const PASS_SEC = process.env.PASS_SEC || "";
-export const register = async (req, res) => {
+const register = async (req, res) => {
   const newUser = new User({
     // fullname: req.body.fullname,
     username: req.body.username,
@@ -22,7 +22,7 @@ export const register = async (req, res) => {
   }
 };
 
-export const login = async (req, res) => {
+const login = async (req, res) => {
   try {
     const user = await User.findOne({
       username: req.body.username,
@@ -58,3 +58,5 @@ export const login = async (req, res) => {
     return res.status(500).json(err);
   }
 };
+
+module.exports = { register, login };
