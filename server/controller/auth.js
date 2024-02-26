@@ -28,6 +28,8 @@ const login = async (req, res) => {
       username: req.body.username,
     });
 
+    // console.log(user);
+
     if (!user) {
       return res.status(401).json("Wrong User Name");
     }
@@ -46,13 +48,14 @@ const login = async (req, res) => {
     const accessToken = jwt.sign(
       {
         id: user._id,
-        isAdmin: user.isAdmin,
+        // isAdmin: user.isAdmin,
       },
       JWT_SEC,
       { expiresIn: "3h" }
     );
 
     const { password, ...others } = user._doc;
+    // console.log(user._doc);
     return res.status(200).json({ ...others, accessToken });
   } catch (err) {
     return res.status(500).json(err);

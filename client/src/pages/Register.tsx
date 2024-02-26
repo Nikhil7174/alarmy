@@ -1,17 +1,20 @@
 import React, { useState } from "react";
-// import { useDispatch, useSelector } from "react-redux";
-// import { register } from "../redux/reducers/auth";
+import { useDispatch, useSelector } from "react-redux";
+import { register } from "../redux/reducers/auth";
+import { useNavigate } from "react-router-dom";
 
-export const Signup = () => {
+export const Register = () => {
+  const navigate = useNavigate();
   const [fullname, setFullname] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  //   const dispatch = useDispatch();
+  const dispatch = useDispatch();
   //   const { isFetching, error }: any = useSelector((state: any) => state.user);
   const handleClick = (e: any) => {
     e.preventDefault();
-    // register(dispatch, { fullname, username, email, password });
+    register(dispatch, { username, email, password });
+    navigate("/");
   };
   return (
     <>
@@ -82,7 +85,9 @@ export const Signup = () => {
                     <div>
                       <label className="block text-sm font-medium text-gray-600">
                         {/* <input type="checkbox" className="mr-2" /> */}
-                        Login
+                        <a href="/login" className="text-indigo-500">
+                          Login
+                        </a>
                       </label>
                     </div>
                     <div>
