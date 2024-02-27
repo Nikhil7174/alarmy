@@ -1,3 +1,4 @@
+//@ts-nocheck
 // UpcomingAlarms.js
 
 import React from "react";

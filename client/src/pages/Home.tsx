@@ -1,15 +1,12 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { logout } from "../redux/reducers/auth";
+// import { useDispatch } from "react-redux";
+// import { useNavigate } from "react-router-dom";
 import { Navbar } from "../components/Navbar";
 import { CreateAlarm } from "../components/CreateAlarm";
 
 export const Home = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const [data, setData] = useState(0);
+  // const dispatch = useDispatch();
+  // const navigate = useNavigate();
+  // const [data, setData] = useState(0);
 
   return (
     <div>

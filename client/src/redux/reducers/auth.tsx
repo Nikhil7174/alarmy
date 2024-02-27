@@ -10,7 +10,6 @@ import {
 } from "./user";
 // import { addProduct , createCart, addProductFailure,addProductStart,addProductSuccess} from './cartRedux';
 import { publicRequest } from "../../apiRequest/index";
-import { Navigate } from "react-router-dom";
 
 export const login = async (dispatch: Dispatch, user: any) => {
   dispatch(loginStart());

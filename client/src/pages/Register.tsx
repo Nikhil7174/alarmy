@@ -1,11 +1,10 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { register } from "../redux/reducers/auth";
 import { useNavigate } from "react-router-dom";
 
 export const Register = () => {
   const navigate = useNavigate();
-  const [fullname, setFullname] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
