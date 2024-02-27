@@ -14,11 +14,16 @@ export const Home = () => {
   return (
     <div>
       <Navbar />
+      <div>
+        <h3 className="font-bold text-3xl my-5 mt-8 ml-4 md:mx-40 xl:mx-64">
+          Your Alarms
+        </h3>
+      </div>
       <div
         id="alarm-container"
-        className="relative min-h-fit p-10 m-10 mx-24 border-8 flex flex-col"
+        className="min-h-fit p-10 md:m-10 bg-[#ffd5ff] md:mx-40 mx-4 xl:mx-64 rounded-lg flex flex-col"
       >
-        <div id="create" className="absolute bottom-0 right-0">
+        <div id="create" className=" bottom-0 right-0">
           <CreateAlarm />
         </div>
       </div>
