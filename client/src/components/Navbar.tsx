@@ -2,7 +2,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { logout } from "../redux/reducers/auth";
+import { logout } from "../redux/actions/auth";
+import { resetState } from "../redux/reducers/alarmReducer";
 
 export const Navbar = () => {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ export const Navbar = () => {
   const handleLogout = (e: any) => {
     e.preventDefault();
     dispatch(logout);
+    dispatch(resetState());
     navigate("/");
   };
 

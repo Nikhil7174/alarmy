@@ -1,9 +1,17 @@
-//@ts-nocheck
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { Select, Option } from "@material-tailwind/react";
 import Alarm from "./alarm";
+import {
+  addAlarm,
+  getAlarms,
+  deleteAlarm,
+  updateAlarm,
+} from "../redux/actions/alarm";
+import { useSelector } from "react-redux";
+import user from "../redux/reducers/user";
+import { userRequest } from "../apiRequest";
 export const CreateAlarm = () => {
   const navigate = useNavigate();
   const [name, setName] = useState("");
@@ -11,6 +19,11 @@ export const CreateAlarm = () => {
   const dispatch = useDispatch();
   const [createAlarm, setCreateAlarm] = useState(false);
   const [alarms, setAlarms] = useState([]);
+
+  // const status = useSelector((state) => state.alarms.status);
+  // const error = useSelector((state) => state.alarms.error);
+  const user = useSelector((state) => state.user.currentUser);
+  console.log(user, "user");
 
   const [selectedHour, setSelectedHour] = useState("");
   const [showHours, setShowHours] = useState(false);
@@ -20,6 +33,9 @@ export const CreateAlarm = () => {
   const [showMins, setShowMins] = useState(false);
   const [toggle, onToggle] = useState(true);
   const [notify, setNotify] = useState(false);
+  const [editingIndex, setEditingIndex] = useState(null);
+  const [update, setUpdate] = useState();
+  const [isSet, setIsSet] = useState(true);
   const formatNumber = (number: number) =>
     number < 10 ? `0${number}` : number;
   // Assume hours are in 24-hour format (00 to 23)
@@ -30,6 +46,12 @@ export const CreateAlarm = () => {
 
   // AM/PM options
   const zones = ["am", "pm"];
+
+  // const alarmsState = useSelector((state: any) => state.alarm.alarms);
+
+  useEffect(() => {
+    getAlarms(dispatch);
+  }, [dispatch]);
 
   const handleZoneChange = (e) => {
     setSelectedZone(e.target.value);
@@ -53,38 +75,91 @@ export const CreateAlarm = () => {
   const toggleMins = () => {
     setShowMins(!showMins);
   };
-  var time = "";
-  const handleClick = (e) => {
-    time = selectedHour + ":" + selectedMin + "" + selectedZone;
+
+  const handleEdit = (index) => {
+    const editedAlarm = alarms[index];
+    setEditingIndex(index);
+    setSelectedHour(editedAlarm.time.split(":")[0]);
+    setSelectedMin(editedAlarm.time.split(":")[1].split(" ")[0]);
+    setSelectedZone(editedAlarm.time.split(" ")[1]);
+    setName(editedAlarm.name);
+    setDescription(editedAlarm.description);
+    setIsSet(editedAlarm.isSet);
+    setCreateAlarm(true);
   };
+
+  // ... (other functions)
+
   const handleCreate = () => {
-    const newAlarm = {
+    setCreateAlarm(true);
+    setUpdate(false);
+    const editedAlarm = {
       time: selectedHour + ":" + selectedMin + " " + selectedZone,
       name: name,
       description: description,
       isSet: true,
     };
+
+    if (editingIndex !== null) {
+      // If editing an existing alarm, update the array with the edited alarm
+      setAlarms((prevAlarms) =>
+        prevAlarms.map((a, i) => (i === editingIndex ? editedAlarm : a))
+      );
+      setEditingIndex(null);
+      // dispatch(updateAlarm(alarm._id));
+    } else {
+      // If creating a new alarm, add it to the array
+      setAlarms((prevAlarms) => [...prevAlarms, editedAlarm]);
+      dispatch(
+        addAlarm({
+          name,
+          description,
+          time: selectedHour + ":" + selectedMin + " " + selectedZone,
+        })
+      );
+    }
+
+    // Clear the form
     setSelectedHour("");
     setSelectedMin("");
     setSelectedZone("");
     setName("");
     setDescription("");
 
-    setAlarms((prevAlarms) => [...prevAlarms, newAlarm]);
-    setCreateAlarm(!createAlarm);
-  };
-  useEffect(() => {
-    // Reset input fields after state is updated
-    setSelectedHour("");
-    setSelectedMin("");
-    setSelectedZone("");
-    setName("");
-    setDescription("");
-
-    // Close the modal
+    // Close the form
     setCreateAlarm(false);
-  }, [alarms]);
+  };
 
+  // useEffect(() => {
+  //   // Fetch alarms from the server on component mount
+  //   const handleRes = async () => {
+  //     try {
+  //       if (user) {
+  //         const res = await userRequest.get("/alarms/fetchAllAlarms");
+  //         setAlarms(res.data);
+
+  //         console.log("Alarms fetched:", res.data);
+  //         console.log("User:", user);
+  //         console.log("Alarms:", alarmsState);
+
+  //         // Wait for the getAlarms action to complete before proceeding
+  //         dispatch(getAlarms());
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching alarms:", error);
+  //     }
+  //   };
+
+  //   handleRes();
+  // }, [dispatch, 10000]);
+
+  const userAlarms = useSelector((state: any) => state.alarm.userAlarms);
+  console.log(userAlarms, "userAlarms");
+
+  useEffect(() => {
+    // Fetch user-specific alarms when the component mounts
+    dispatch(getAlarms());
+  }, [dispatch]);
   return (
     <div>
       <div id="createalarm">
@@ -238,7 +313,7 @@ export const CreateAlarm = () => {
                                 type="text"
                                 id="username"
                                 name="username"
-                                className="mt-1 p-2 w-[35vw] border rounded-md"
+                                className="mt-1 p-2 w-[35vw] lg:w-[21vw] border rounded-md"
                                 required
                                 value={name}
                                 onChange={(e: any) => setName(e.target.value)}
@@ -255,7 +330,7 @@ export const CreateAlarm = () => {
                                 rows={4}
                                 id="description"
                                 name="description"
-                                className="mt-1 p-2 w-[35vw] border rounded-md"
+                                className="mt-1 p-2 w-[35vw] lg:w-[21vw] border rounded-md"
                                 required
                                 value={description}
                                 onChange={(e: any) =>
@@ -274,7 +349,7 @@ export const CreateAlarm = () => {
                       type="button"
                       className="inline-flex w-full justify-center bg-gradient-to-r from-indigo-500 to-pink-400 ...  p-2 rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"
                     >
-                      Create
+                      {/* {update == false ? "Create" : "Update"} */}Create
                     </button>
                     <button
                       onClick={() => setCreateAlarm(!createAlarm)}
@@ -291,7 +366,11 @@ export const CreateAlarm = () => {
         </div>
 
         <div id="createdAlarms">
-          {alarms.map((alarm, index) => (
+          {/* {status === "loading" && <p>Loading alarms...</p>}
+          {status === "failed" && <p>Error fetching alarms: {error}</p>}
+          {status === "succeeded" && */}
+
+          {userAlarms.map((alarm, index) => (
             <Alarm
               key={index}
               time={alarm.time}
@@ -306,10 +385,17 @@ export const CreateAlarm = () => {
                   )
                 );
               }}
+              onEdit={() => {
+                handleEdit(index);
+                // setUpdate(true);
+                console.log(alarm, alarm._id);
+                dispatch(updateAlarm(alarm._id));
+              }}
               onDelete={() => {
                 const updatedAlarms = [...alarms];
                 updatedAlarms.splice(index, 1);
                 setAlarms(updatedAlarms);
+                dispatch(deleteAlarm(alarm._id));
               }}
             />
           ))}

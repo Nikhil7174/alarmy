@@ -8,10 +8,11 @@ const Alarm = ({
   isSet,
   onToggle,
   onDelete,
+  onEdit,
   notify,
 }) => {
   const [truncatedDescription, setTruncatedDescription] = useState(
-    description.length > 500
+    description?.length > 500
       ? description.substring(0, 497) + "..." + description.slice(-3)
       : description
   );
@@ -67,7 +68,7 @@ const Alarm = ({
       <div className="flex items-center">
         <button
           className="text-blue-500 hover:text-blue-700 mr-4"
-          //   onClick={onEdit}
+          onClick={onEdit}
         >
           Edit
         </button>

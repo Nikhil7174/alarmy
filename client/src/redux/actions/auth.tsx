@@ -7,7 +7,7 @@ import {
   registerStart,
   registerSuccess,
   registerFailure,
-} from "./user";
+} from "../reducers/user";
 // import { addProduct , createCart, addProductFailure,addProductStart,addProductSuccess} from './cartRedux';
 import { publicRequest } from "../../apiRequest/index";
 

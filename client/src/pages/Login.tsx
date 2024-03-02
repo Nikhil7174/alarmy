@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { login } from "../redux/reducers/auth";
+import { login } from "../redux/actions/auth";
 import { useNavigate } from "react-router-dom";
+import { getAlarms } from "../redux/actions/alarm";
+import { userRequest } from "../apiRequest";
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -12,8 +14,15 @@ export const Login = () => {
   const handleClick = (e: any) => {
     e.preventDefault();
     login(dispatch, { username, password });
+    getAlarms(dispatch);
     navigate("/");
   };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //   const res = await userRequest.get("/fetchAllAlarms");
+  //   }
+  //   getAlarms(dispatch);
+  // }, [dispatch]);
   return (
     <>
       <div className="relative">

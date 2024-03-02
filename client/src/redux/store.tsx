@@ -1,5 +1,6 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import userReducer from "./reducers/user";
+import alarmReducer from "./reducers/alarmReducer";
 import {
   persistStore,
   persistReducer,
@@ -18,7 +19,8 @@ const persistConfig = {
   storage,
 };
 
-const rootReducer = combineReducers({ user: userReducer });
+const rootReducer = combineReducers({ user: userReducer, alarm: alarmReducer });
+console.log("rootreducerr", rootReducer);
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

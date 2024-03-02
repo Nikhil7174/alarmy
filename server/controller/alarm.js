@@ -1,80 +1,112 @@
-const PostMessage = require("../models/postMessage");
-const mongoose = require("mongoose");
+const express = require("express");
+const router = express.Router();
+const Alarm = require("../models/alarm");
+var auth = require("../middleware/auth");
+const { body, validationResult } = require("express-validator");
 
-const getAlarms = async (req, res) => {
-  const { page } = req.query;
-
+//Route-1 Get all alarms of logged in users using: get '/api/alarms/fetchallalarms'. login required
+const fetchallAlarms = async (req, res) => {
   try {
-    const LIMIT = 8;
-    const startIndex = (Number(page) - 1) * LIMIT; //get the starting index of every page
-    const total = await PostMessage.countDocuments({});
-    const post = await PostMessage.find()
-      .sort({ _id: -1 })
-      .limit(LIMIT)
-      .skip(startIndex);
-    res.status(200).json({
-      data: post,
-      currentPage: Number(page),
-      numberOfPages: Math.ceil(total / LIMIT),
-    });
+    const alarms = await Alarm.find({ user: req.user.id });
+    res.json(alarms);
   } catch (error) {
-    res.status(404).json({ message: error.message });
+    console.log(error.message);
+    res.status(500).send("Some error occured");
   }
 };
 
-const upcomingAlarm = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const post = await PostMessage.findById(id);
-    res.status(200).json(post);
-  } catch (error) {
-    res.status(404).json({ message: error.message });
-  }
-};
-
-//Query -> /posts?page=1  -> page=1
-//Params -> /posts/123    -> id=123
-
+//Route-2 Add a new alarm of logged in users using: post '/api/alarms/addalarm'. login required
 const createAlarm = async (req, res) => {
-  const post = req.body;
-  const newPostMessage = new PostMessage(post);
   try {
-    await newPostMessage.save();
-    res.status(201).json(newPostMessage);
+    const { name, description, time, isSet } = req.body;
+    //if there are errors, return bad request and the errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    const alarm = new Alarm({
+      name,
+      description,
+      time,
+      isSet,
+      user: req.user.id,
+    });
+    const savealarms = await alarm.save();
+
+    res.json(savealarms);
   } catch (error) {
-    res.status(409).json({ message: error.message });
+    console.log(error.message);
+    res.status(500).send("Some error occured");
   }
 };
 
-// /post/id
-const updateAlarm = async (req, res) => {
-  const { id: _id } = req.params;
-  const post = req.body;
-  if (!mongoose.Types.ObjectId.isValid(_id)) {
-    return res.status(404).send("no post with that id");
-  }
+//Route-3 Update n existing alarm of logged in users using: put '/api/alarms/addalarm'. login required
+const updateAlarm =
+  (auth,
+  async (req, res) => {
+    const { user, name, description, time, isSet } = req.body;
+    try {
+      //create a alarm object
+      const newalarm = {};
+      if (user) {
+        newalarm.user = user;
+      }
+      if (name) {
+        newalarm.name = name;
+      }
+      if (description) {
+        newalarm.description = description;
+      }
+      if (time) {
+        newalarm.time = time;
+      }
+      if (isSet) {
+        newalarm.isSet = isSet;
+      }
 
-  const updatedPost = await PostMessage.findByIdAndUpdate(
-    _id,
-    { ...post, _id },
-    { new: true }
-  );
-  res.json(updatedPost);
-};
+      // Find the alarm to be updated and update it
+      let alarm = await Alarm.findById(req.params.id);
+      console.log(alarm);
+      if (!alarm) {
+        return res.status(404).send("Not found");
+      }
 
+      if (alarm.user.toString() !== req.user.id) {
+        return res.status(401).send("Not allowed");
+      }
+
+      alarm = await Alarm.findByIdAndUpdate(
+        req.params.id,
+        { $set: newalarm },
+        { new: true }
+      );
+      res.json({ alarm });
+    } catch (error) {
+      console.log(error.message);
+      res.status(500).send("Some error occured");
+    }
+  });
+
+//Route-4 Delete an existing alarm of logged in users using: delete '/api/alarms/deletealarm'. login required
 const deleteAlarm = async (req, res) => {
-  const { id: _id } = req.params;
-  if (!mongoose.Types.ObjectId.isValid(_id)) {
-    return res.status(404).send("no post with that id");
+  try {
+    // Find the alarm to be deleted and delete it
+    let alarm = await Alarm.findById(req.params.id);
+    if (!alarm) {
+      return res.status(404).send("Not found");
+    }
+
+    //allow deletion only if user is the owner of the alarm
+    if (alarm.user.toString() !== req.user.id) {
+      return res.status(401).send("Not allowed");
+    }
+
+    alarm = await Alarm.findByIdAndDelete(req.params.id);
+    res.json({ sucess: "alarm has been deleted", alarm: alarm });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send("Some error occured");
   }
-  await PostMessage.findByIdAndRemove(_id);
-  res.json({ message: "Post deleted successfully" });
 };
 
-module.exports = {
-  createAlarm,
-  getAlarms,
-  upcomingAlarm,
-  deleteAlarm,
-  updateAlarm,
-};
+module.exports = { createAlarm, updateAlarm, deleteAlarm, fetchallAlarms };

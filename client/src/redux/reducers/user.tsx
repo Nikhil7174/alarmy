@@ -29,6 +29,7 @@ const userSlice: any = createSlice({
       state.isFetching = false;
       state.currentUser = null;
       state.error = false;
+      state = null;
     },
     logoutFailure: (state) => {
       state.isFetching = false;
@@ -40,7 +41,7 @@ const userSlice: any = createSlice({
     registerSuccess: (state, action) => {
       state.isFetching = false;
       state.currentUser = action.payload;
-      
+
       state.error = false;
     },
     registerFailure: (state) => {
