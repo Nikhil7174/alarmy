@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { useState } from "react";
 // import { useDispatch } from "react-redux";
 // import { register } from "../redux/actions/auth";

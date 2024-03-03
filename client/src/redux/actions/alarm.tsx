@@ -1,3 +1,4 @@
+//@ts-nocheck
 import axios from "axios";
 import { useSelector } from "react-redux";
 // import { BASE_URL } from "../../constants/config";

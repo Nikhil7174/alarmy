@@ -14,7 +14,7 @@ const initialState = {
   error: false,
 };
 
-export default function userReducer(state = initialState, action) {
+export default function userReducer(state = initialState, action: any) {
   const { type, payload } = action;
 
   switch (type) {

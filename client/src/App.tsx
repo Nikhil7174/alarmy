@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Login } from "./pages/Login";
-import { AlarmPage } from "./pages/AlarmPage";
 
 function App() {
   const user: any = useSelector((state: any) => state.userReducer.token);

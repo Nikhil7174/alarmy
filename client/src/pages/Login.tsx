@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 // import { login } from "../redux/actions/auth";

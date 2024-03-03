@@ -19,7 +19,7 @@ let initialState = {
   data: [],
 };
 
-export const alarmReducer = (state = initialState, action) => {
+export const alarmReducer = (state = initialState, action: any) => {
   const { type, payload } = action;
 
   switch (type) {

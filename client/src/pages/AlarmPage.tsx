@@ -2,7 +2,7 @@
 // import { useNavigate } from "react-router-dom";
 import { Navbar } from "../components/Navbar";
 import { CreateAlarm } from "../components/CreateAlarm";
-import UpComingAlarm from "../components/UpComingAlarm";
+// import UpComingAlarm from "../components/UpComingAlarm";
 
 export const AlarmPage = () => {
   // const dispatch = useDispatch();
