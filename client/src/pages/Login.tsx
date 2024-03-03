@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { login } from "../redux/actions/auth";
+// import { login } from "../redux/actions/auth";
 import { useNavigate } from "react-router-dom";
-import { getAlarms } from "../redux/actions/alarm";
+// import { getAlarms } from "../redux/actions/alarm";
 import { userRequest } from "../apiRequest";
+import { getUser } from "../redux/actions/auth";
+import { useSelector } from "react-redux";
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -11,18 +13,28 @@ export const Login = () => {
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   // const { isFetching, error } = useSelector((state: any) => state.user);
+
+  const state = useSelector((state: any) => state.userReducer);
+  console.log(state);
+  // console.log(auth, token);
+  // useEffect(() => {
+  //   if (state.auth) {
+  //     navigate("/");
+  //   }
+  // }, []);
+  if (state.auth) {
+    navigate("/alarms/");
+  }
+
   const handleClick = (e: any) => {
     e.preventDefault();
-    login(dispatch, { username, password });
-    getAlarms(dispatch);
-    navigate("/");
+    console.log("Logging in...");
+    dispatch(getUser({ username, password }));
+    console.log("Dispatched getUser action");
+    // getAlarms(dispatch);
+    navigate("/alarms/");
   };
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //   const res = await userRequest.get("/fetchAllAlarms");
-  //   }
-  //   getAlarms(dispatch);
-  // }, [dispatch]);
+
   return (
     <>
       <div className="relative">
@@ -105,6 +117,7 @@ export const Login = () => {
                   </div>
                   <button
                     type="submit"
+                    onClick={handleClick}
                     className="w-full bg-gradient-to-r from-indigo-500 to-pink-400 ... text-white p-2 rounded-md hover:bg-blue-600"
                   >
                     Login

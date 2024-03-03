@@ -6,18 +6,30 @@ import { useSelector } from "react-redux";
 
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Login } from "./pages/Login";
+import { AlarmPage } from "./pages/AlarmPage";
 
 function App() {
-  const user: any = useSelector((state: any) => state.user.currentUser);
+  const user: any = useSelector((state: any) => state.userReducer.token);
+  // const user = false;
+  console.log(user);
   // const parsedUser = user ? JSON.parse(user) : null;
   // console.log(parsedUser);
   console.log(user);
   return (
     <>
       <BrowserRouter>
-        {/* <Container maxWidth="xl"> */}
-        {/* <Navbar /> */}
         <Routes>
+          {/* <Container maxWidth="xl"> */}
+          {/* <Navbar /> */}
+          <Route
+            path="/alarms"
+            element={!user ? <Navigate to="/login" /> : <Home />}
+          />
+          <Route
+            path="/"
+            element={!user ? <Navigate to="/login" /> : <Home />}
+          />
+
           <Route
             path="/login"
             element={user ? <Navigate to="/" /> : <Login />}
@@ -26,10 +38,7 @@ function App() {
             path="/register"
             element={user ? <Navigate to="/" /> : <Register />}
           />
-          <Route
-            path="/"
-            element={!user ? <Navigate to="/login" /> : <Home />}
-          />
+
           {/* <Route exact path="/posts/search" element={<Home />} />
             <Route exact path="/posts/:id" element={<PostDetails />} /> */}
           {/* {!user ? (

@@ -15,8 +15,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.use(express.json());
 app.use("/api/auth", authRoute);
-app.use("/api/alarms", alarmsRoute);
+app.use("/api/alarm", alarmsRoute);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on PORT ${process.env.PORT}`);
 });
+
+// console.log("MONGO_URL:", process.env.MONGO_URL);
+// console.log("PORT:", process.env.PORT);

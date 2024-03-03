@@ -2,18 +2,19 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { logout } from "../redux/actions/auth";
-import { resetState } from "../redux/reducers/alarmReducer";
+// import { logout } from "../redux/actions/auth";
+// import { resetState } from "../redux/reducers/alarmReducer";
+import { LOGOUT } from "../redux/user.types";
 
 export const Navbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const handleLogout = (e: any) => {
-    e.preventDefault();
-    dispatch(logout);
-    dispatch(resetState());
-    navigate("/");
-  };
+  // const handleLogout = (e: any) => {
+  //   e.preventDefault();
+  //   dispatch(logout);
+  //   dispatch(resetState());
+  //   navigate("/");
+  // };
 
   return (
     <div>
@@ -40,7 +41,13 @@ export const Navbar = () => {
           </div>
           <div className="text-gray-500 order-3 w-full md:w-auto md:order-2"></div>
           <div className="order-2 md:order-3">
-            <button className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-pink-400 ...  hover:bg-indigo-600 text-gray-50 rounded-xl flex items-center gap-2">
+            <button
+              className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-pink-400 ...  hover:bg-indigo-600 text-gray-50 rounded-xl flex items-center gap-2"
+              onClick={() => {
+                dispatch({ type: LOGOUT });
+                dispatch({ type: "RESET_ALARM" });
+              }}
+            >
               {/* <!-- Heroicons - Login Solid --> */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -54,7 +61,7 @@ export const Navbar = () => {
                   clip-rule="evenodd"
                 />
               </svg>
-              <span onClick={handleLogout}>Logout</span>
+              {/* <span onClick={handleLogout}>Logout</span> */}
             </button>
           </div>
         </div>

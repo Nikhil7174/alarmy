@@ -1,19 +1,32 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { register } from "../redux/actions/auth";
+// import { useDispatch } from "react-redux";
+// import { register } from "../redux/actions/auth";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
+const BASE_URL = "http://localhost:5000/api";
 
 export const Register = () => {
-  const navigate = useNavigate();
-  const [username, setUsername] = useState("");
+  const nav = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const dispatch = useDispatch();
-  //   const { isFetching, error }: any = useSelector((state: any) => state.user);
-  const handleClick = (e: any) => {
+  const [username, setUsername] = useState("");
+
+  const handleSignup = async (e) => {
     e.preventDefault();
-    register(dispatch, { username, email, password });
-    navigate("/");
+    let data = await axios.post(BASE_URL + "/auth/register", {
+      username,
+      email,
+      password,
+    });
+    let { message, status } = data.data;
+    console.log(message, status);
+    if (status == 1) {
+      alert(message);
+      nav("/login");
+    } else {
+      alert(message);
+    }
   };
   return (
     <>
@@ -31,7 +44,7 @@ export const Register = () => {
                     className="min-h-10 min-w-10 h-20 w-20 items-center justify-center"
                   />
                 </div>
-                <form onSubmit={handleClick}>
+                <form onSubmit={handleSignup}>
                   <div className="mb-4">
                     <label
                       htmlFor="username"
@@ -97,6 +110,7 @@ export const Register = () => {
                   </div>
                   <button
                     type="submit"
+                    onClick={handleSignup}
                     className="w-full bg-gradient-to-r from-indigo-500 to-pink-400 ... text-white p-2 rounded-md hover:bg-blue-600"
                   >
                     Sign Up

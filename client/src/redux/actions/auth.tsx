@@ -1,45 +1,28 @@
-import { Dispatch } from "redux"; // Make sure to import the Dispatch type
+import axios from "axios";
+// import { BASE_URL } from "../../constants/config";
 import {
-  loginFailure,
-  loginStart,
-  loginSuccess,
-  logoutSuccess,
-  registerStart,
-  registerSuccess,
-  registerFailure,
-} from "../reducers/user";
-// import { addProduct , createCart, addProductFailure,addProductStart,addProductSuccess} from './cartRedux';
-import { publicRequest } from "../../apiRequest/index";
+  LOGIN_USER_ERROR,
+  LOGIN_USER_LOADING,
+  LOGIN_USER_SUCCESS,
+} from "../user.types";
 
-export const login = async (dispatch: Dispatch, user: any) => {
-  dispatch(loginStart());
+const BASE_URL = "http://localhost:5000/api";
+
+export const getUser = (obj) => async (distpatch) => {
+  distpatch({ type: LOGIN_USER_LOADING });
   try {
-    console.log(user);
-    const res = await publicRequest.post("/auth/login", user);
-    dispatch(loginSuccess(res.data));
-  } catch (err) {
-    console.log(err);
-    dispatch(loginFailure());
-  }
-};
-
-export const logout = async (dispatch: Dispatch) => {
-  dispatch(logoutSuccess());
-  // try {
-  //   const res = await publicRequest.post('/auth/login', user);
-  //   dispatch(logoutSuccess(res.data));
-  // } catch (err) {
-  //   dispatch(logoutFailure());
-  // }
-};
-
-export const register = async (dispatch: Dispatch, user: any) => {
-  dispatch(registerStart());
-  try {
-    const res = await publicRequest.post("/auth/register", user);
-    dispatch(registerSuccess(res.data));
-    // Navigate("/login")
-  } catch (err) {
-    dispatch(registerFailure());
+    let data = await axios(BASE_URL + "/auth/login", {
+      method: "post",
+      data: obj,
+    });
+    let { message, token, status } = data.data;
+    if (status == 1) {
+      distpatch({ type: LOGIN_USER_SUCCESS, payload: token });
+    } else {
+      alert(message);
+      distpatch({ type: LOGIN_USER_ERROR });
+    }
+  } catch (error) {
+    distpatch({ type: LOGIN_USER_ERROR });
   }
 };

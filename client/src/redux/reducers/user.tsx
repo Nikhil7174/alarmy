@@ -1,65 +1,53 @@
-//@ts-nocheck
-import { createSlice } from "@reduxjs/toolkit";
+import {
+  LOGIN_USER_ERROR,
+  LOGIN_USER_LOADING,
+  LOGIN_USER_SUCCESS,
+  LOGOUT,
+  // REGISTER_USER_ERROR,
+  // REGISTER_USER_LOADING,
+} from "../user.types";
 
-const userSlice: any = createSlice({
-  name: "user",
-  initialState: {
-    currentUser: null,
-    isFetching: false,
-    error: false,
-  },
-  reducers: {
-    loginStart: (state) => {
-      state.isFetching = true;
-    },
-    loginSuccess: (state, action) => {
-      console.log(state);
-      state.isFetching = false;
-      state.currentUser = action.payload;
-      state.error = false;
-    },
-    loginFailure: (state) => {
-      state.isFetching = false;
-      state.error = true;
-    },
-    logoutStart: (state) => {
-      state.isFetching = true;
-    },
-    logoutSuccess: (state) => {
-      state.isFetching = false;
-      state.currentUser = null;
-      state.error = false;
-      state = null;
-    },
-    logoutFailure: (state) => {
-      state.isFetching = false;
-      state.error = true;
-    },
-    registerStart: (state) => {
-      state.isFetching = true;
-    },
-    registerSuccess: (state, action) => {
-      state.isFetching = false;
-      state.currentUser = action.payload;
+const initialState = {
+  token: null,
+  auth: false,
+  loading: false,
+  error: false,
+};
 
-      state.error = false;
-    },
-    registerFailure: (state) => {
-      state.isFetching = false;
-      state.error = true;
-    },
-  },
-});
+export default function userReducer(state = initialState, action) {
+  const { type, payload } = action;
 
-export const {
-  loginStart,
-  loginSuccess,
-  loginFailure,
-  logoutStart,
-  logoutSuccess,
-  logoutFailure,
-  registerStart,
-  registerSuccess,
-  registerFailure,
-} = userSlice.actions;
-export default userSlice.reducer;
+  switch (type) {
+    case LOGIN_USER_LOADING: {
+      return {
+        ...state,
+        loading: true,
+      };
+    }
+
+    case LOGIN_USER_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        error: false,
+        token: payload,
+        auth: true,
+      };
+    }
+
+    case LOGIN_USER_ERROR: {
+      return {
+        ...state,
+        loading: false,
+        error: true,
+      };
+    }
+    case LOGOUT: {
+      return initialState;
+    }
+
+    default: {
+      return state;
+    }
+  }
+}

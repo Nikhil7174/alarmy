@@ -1,20 +1,30 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-const auth = (req, res, next) => {
-  const authHeader = req.headers.token;
-  const JWT_SEC = process.env.JWT_SEC || "";
-  if (authHeader) {
-    const token = authHeader.split(" ")[1];
-    // console.log(token);
-    jwt.verify(token, JWT_SEC, (err, user) => {
-      if (err) return res.status(403).json("Token is not valid!");
-      req.user = user;
+function auth(req, res, next) {
+  const token = req.headers.authorization;
+  console.log("req.headers", req.headers);
+  console.log("token--", token);
+  const authHeader = req.headers.authorization;
+  jwt.verify(token, "@one", (err, decode) => {
+    if (err)
+      return res.send({
+        message: "Token is not valid please --- login",
+        // console.log("Token is not valid please -------------login"),
+        status: 2,
+      });
+    if (decode) {
+      req.body.user = decode.userId;
       next();
-    });
-  } else {
-    return res.status(401).json("You are not authenticated!");
-  }
-};
+    } else {
+      res.send({
+        message: "Token is not valid please login",
+        status: 2,
+      });
+    }
+  });
+}
 
-module.exports = auth;
+module.exports = {
+  auth,
+};

@@ -12,10 +12,11 @@ const Alarm = ({
   notify,
 }) => {
   const [truncatedDescription, setTruncatedDescription] = useState(
-    description?.length > 500
-      ? description.substring(0, 497) + "..." + description.slice(-3)
+    description?.length > 100
+      ? description.substring(0, 97) + "..." + description.slice(-3)
       : description
   );
+  // console.log("truncatedDescription", truncatedDescription);
 
   const [alarmTime, setAlarmTime] = useState(time);
   const [currentTime, setCurrentTime] = useState("");
@@ -58,12 +59,17 @@ const Alarm = ({
 
   return (
     <div className="bg-white shadow-md rounded p-4 mb-4 flex items-center justify-between">
-      <div>
+      <div className="flex flex-col flex-wrap mr-3">
         <p className="text-xl font-bold mb-2">{time}</p>
         <p className="text-gray-600">{name}</p>
-        <p className="text-gray-700 overflow-hidden overflow-ellipsis">
-          {truncatedDescription}
-        </p>
+        <div className="flex flex-wrap">
+          <p
+            style={{ overflowWrap: "anywhere" }}
+            className="text-gray-700 overflow-hidden overflow-ellipsis overflow-y-auto flex-wrap flex break-words whitespace-normal"
+          >
+            {truncatedDescription}
+          </p>
+        </div>
       </div>
       <div className="flex items-center">
         <button
