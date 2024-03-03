@@ -13,7 +13,7 @@ const Alarm = ({
 }) => {
   const [truncatedDescription, setTruncatedDescription] = useState(
     description?.length > 100
-      ? description.substring(0, 97) + "..." + description.slice(-3)
+      ? description.substring(0, 117) + "..." + description.slice(-3)
       : description
   );
   // console.log("truncatedDescription", truncatedDescription);

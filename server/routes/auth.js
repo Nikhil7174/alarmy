@@ -1,5 +1,5 @@
 const express = require("express");
-const User = require("../models/user");
+const { User } = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -8,9 +8,17 @@ const userRouter = express.Router();
 userRouter.get("/", (req, res) => {
   res.send("All the user");
 });
+const regx =
+  /([a-zA-Z0-9]+)([\_\.\-{1}])?([a-zA-Z0-9]+)\@([a-zA-Z0-9]+)([\.])([a-zA-Z\.]+)/g;
 
 userRouter.post("/register", async (req, res) => {
   const { username, email, password } = req.body;
+  if (!regx.test(email)) {
+    return res.send({
+      message: "Invalid email",
+      status: 0,
+    });
+  }
   bcrypt.hash(password, 5, async function (err, hash) {
     if (err) return res.send({ message: "somthing went wrong", status: 0 });
     try {

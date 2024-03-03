@@ -62,6 +62,7 @@ export const Navbar = () => {
                 />
               </svg>
               {/* <span onClick={handleLogout}>Logout</span> */}
+              Logout
             </button>
           </div>
         </div>
