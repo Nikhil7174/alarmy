@@ -38,7 +38,7 @@ export const Register = () => {
         <div className="absolute inset-0 flex items-center justify-center z-10">
           <div className="" id="signUpForm">
             <div className="flex items-center justify-center bg-gray-100 rounded-lg">
-              <div className="max-w-md w-full p-6 bg-white rounded-md shadow-md">
+              <div className="max-w-md w-full p-6 md:w-screen md:h-fit md:space-y-10 md:p-[3rem] xl:p-[3rem] bg-white rounded-2xl shadow-md">
                 {/* <h2 className="text-2xl font-semibold mb-4">Sign Up</h2> */}
                 <div className="items-center justify-center flex mb-5">
                   <img
