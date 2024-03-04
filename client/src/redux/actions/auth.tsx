@@ -7,7 +7,7 @@ import {
   LOGIN_USER_SUCCESS,
 } from "../user.types";
 
-const BASE_URL = "https://alarmy.onrender.com";
+const BASE_URL = "https://alarmy.onrender.com/api";
 
 export const getUser = (obj) => async (distpatch) => {
   distpatch({ type: LOGIN_USER_LOADING });
