@@ -19,7 +19,7 @@ import {
   UPDATE_NOTES_SUCCESS,
 } from "../alarm.types";
 
-const BASE_URL = "http://localhost:5000/api";
+const BASE_URL = "https://alarmy.onrender.com";
 
 export const getAlarms = () => async (dispatch) => {
   const { token } = store.getState().userReducer;

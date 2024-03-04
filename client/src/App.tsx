@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Login } from "./pages/Login";
+// import { EmailVerification } from "./pages/EmailVerification";
 
 function App() {
   const user: any = useSelector((state: any) => state.userReducer.token);
@@ -20,6 +21,10 @@ function App() {
         <Routes>
           {/* <Container maxWidth="xl"> */}
           {/* <Navbar /> */}
+          {/* <Route
+            path="/auth/verify/:id/:token"
+            element={<EmailVerification />}
+          /> */}
           <Route
             path="/alarms"
             element={!user ? <Navigate to="/login" /> : <Home />}
